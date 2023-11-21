@@ -54,10 +54,6 @@ class UserPreferencesRepository constructor(private val dataStore: DataStore<Pre
     private val sharedPreferences =
         context.applicationContext.getSharedPreferences(USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    // Keep the sort order as a stream of changes
-    private val _sortOrderFlow = MutableStateFlow(sortOrder)
-    val sortOrderFlow: StateFlow<SortOrder> = _sortOrderFlow
-
     val userPreferencesFlow: Flow<UserPreferences> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
@@ -74,14 +70,6 @@ class UserPreferencesRepository constructor(private val dataStore: DataStore<Pre
             UserPreferences(showCompleted, sortOrder)
         }
 
-    /**
-     * Get the sort order. By default, sort order is None.
-     */
-    private val sortOrder: SortOrder
-        get() {
-            val order = sharedPreferences.getString(SORT_ORDER_KEY, SortOrder.NONE.name)
-            return SortOrder.valueOf(order ?: SortOrder.NONE.name)
-        }
 
     suspend fun enableSortByDeadline(enable: Boolean) {
         dataStore.edit { preferences ->
@@ -129,12 +117,6 @@ class UserPreferencesRepository constructor(private val dataStore: DataStore<Pre
                     }
                 }
             preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
-        }
-    }
-
-    private fun updateSortOrder(sortOrder: SortOrder) {
-        sharedPreferences.edit {
-            putString(SORT_ORDER_KEY, sortOrder.name)
         }
     }
 
