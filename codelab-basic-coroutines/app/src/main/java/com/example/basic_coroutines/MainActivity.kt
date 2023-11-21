@@ -34,7 +34,17 @@ class MainActivity : ComponentActivity() {
 fun Main() {
     runBlocking {
         println("Weather forecast")
-        delay(1000)
-        println("Sunny")
+        printForecast()
+        printTemperature()
     }
+}
+
+suspend fun printForecast() {
+    delay(1000)
+    println("Sunny")
+}
+
+suspend fun printTemperature() {
+    delay(1000)
+    println("30\u00b0C")
 }
