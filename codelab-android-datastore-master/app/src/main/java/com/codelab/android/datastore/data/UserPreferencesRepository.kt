@@ -40,7 +40,10 @@ enum class SortOrder {
     BY_DEADLINE_AND_PRIORITY
 }
 
-data class UserPreferences(val showCompleted: Boolean)
+data class UserPreferences(
+    val showCompleted: Boolean,
+    val sortOrder: SortOrder
+)
 
 /**
  * Class that handles saving and retrieving user preferences
