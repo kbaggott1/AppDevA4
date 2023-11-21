@@ -15,9 +15,11 @@
  */
 package com.example.racetracker.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 
 /**
@@ -50,9 +52,14 @@ class RaceParticipant(
     }
 
     suspend fun run() {
-        while (currentProgress < maxProgress) {
-            delay(progressDelayMillis)
-            currentProgress += progressIncrement
+        try {
+            while (currentProgress < maxProgress) {
+                delay(progressDelayMillis)
+                currentProgress += progressIncrement
+            }
+        } catch (e: CancellationException) {
+            Log.e("RaceParticipant", "$name: ${e.message}")
+            throw e
         }
     }
 
