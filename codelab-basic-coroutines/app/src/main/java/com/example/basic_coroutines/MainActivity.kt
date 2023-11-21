@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.basic_coroutines.ui.theme.BasiccoroutinesTheme
 import kotlinx.coroutines.*
+import kotlin.system.measureTimeMillis
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,11 +33,14 @@ class MainActivity : ComponentActivity() {
 }
 
 fun Main() {
-    runBlocking {
-        println("Weather forecast")
-        printForecast()
-        printTemperature()
+    val time = measureTimeMillis {
+        runBlocking {
+            println("Weather forecast")
+            printForecast()
+            printTemperature()
+        }
     }
+    println("Execution time: ${time / 1000.0} seconds")
 }
 
 suspend fun printForecast() {
