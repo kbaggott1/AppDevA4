@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.basic_coroutines.ui.theme.BasiccoroutinesTheme
+import kotlinx.coroutines.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,5 +32,9 @@ class MainActivity : ComponentActivity() {
 }
 
 fun Main() {
-
+    runBlocking {
+        println("Weather forecast")
+        delay(1000)
+        println("Sunny")
+    }
 }
