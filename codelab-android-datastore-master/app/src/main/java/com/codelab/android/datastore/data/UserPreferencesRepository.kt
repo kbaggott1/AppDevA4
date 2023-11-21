@@ -23,6 +23,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,16 +60,18 @@ class UserPreferencesRepository constructor(private val dataStore: DataStore<Pre
 
     val userPreferencesFlow: Flow<UserPreferences> = dataStore.data
         .catch { exception ->
-            // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
                 emit(emptyPreferences())
             } else {
                 throw exception
             }
         }.map { preferences ->
-            // Get our show completed value, defaulting to false if not set:
-            val showCompleted = preferences[PreferencesKeys.SHOW_COMPLETED]?: false
-            UserPreferences(showCompleted)
+            val sortOrder =
+                SortOrder.valueOf(
+                    preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.NONE.name)
+
+            val showCompleted = preferences[PreferencesKeys.SHOW_COMPLETED] ?: false
+            UserPreferences(showCompleted, sortOrder)
         }
 
     /**
@@ -128,6 +131,7 @@ class UserPreferencesRepository constructor(private val dataStore: DataStore<Pre
 
     private object PreferencesKeys {
         val SHOW_COMPLETED = booleanPreferencesKey("show_completed")
+        val SORT_ORDER = stringPreferencesKey("sort_order")
     }
 
     suspend fun updateShowCompleted(showCompleted: Boolean) {
