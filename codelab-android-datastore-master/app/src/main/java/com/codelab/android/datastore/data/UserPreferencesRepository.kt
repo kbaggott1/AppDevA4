@@ -21,6 +21,7 @@ import androidx.core.content.edit
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -124,5 +125,11 @@ class UserPreferencesRepository constructor(private val dataStore: DataStore<Pre
 
     private object PreferencesKeys {
         val SHOW_COMPLETED = booleanPreferencesKey("show_completed")
+    }
+
+    suspend fun updateShowCompleted(showCompleted: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SHOW_COMPLETED] = showCompleted
+        }
     }
 }
